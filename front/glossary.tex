@@ -1,0 +1,18 @@
+% After running typeset with LaTex go to the terminal and move to the folder which
+% contains the main.tex and execute makeglossaries main. Then run typeset again.
+
+\setlength{\itemsep}{2ex}
+
+
+
+
+\newglossarystyle{mylong}{%
+  \setglossarystyle{long}%
+  \renewenvironment{theglossary}%
+     {\begin{longtable}[l]{@{}p{\dimexpr 3cm-\tabcolsep}p{0.8\hsize}}}% <-- change the value here
+     {\end{longtable}}%
+ }
+
+\renewcommand{\baselinestretch}{1.5}
+\printglossary[type=\acronymtype, title=List of Abbreviations, toctitle=List of Abbreviations, style=mylong]
+\renewcommand{\baselinestretch}{1.3}

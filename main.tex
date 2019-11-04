@@ -1,0 +1,115 @@
+%%%----------------------------------------------------------
+% Latex-Template for writing a BSc-/Msc-Thesis
+% at Hydrological Chairs of University of Freiburg
+% 2019, created by Robin Schwemmle
+%%%----------------------------------------------------------
+
+%%% File encoding: UTF-8
+%% äöüÄÖÜß  <-- no German Umlauts here? Use an UTF-8 compatible editor!
+
+%%% Magic comments for setting the correct parameters in compatible IDEs
+% !TeX encoding = utf8
+% !TeX program = pdflatex
+% !TeX spellcheck = en_US
+% !BIB program = biber
+
+\documentclass[master,english]{hydrothesis}
+% Permissible options in [..]:
+%   Type of work: master
+%   Main language: english
+%%%----------------------------------------------------------
+
+\usepackage[utf8]{inputenc}		% Remove when using lualatex or xelatex
+
+%% list of abbreviations
+% After running typeset with LaTex go to the terminal and move to the folder which
+% contains the main.tex and execute makeglossaries main. Then run Typeset again.
+\makeglossaries
+
+%% list of symbols
+% After running typeset with LaTex go to the terminal and move to the folder which
+% contains the main.tex and execute makeindex main.nlo -s nomencl.ist -o main.nls. Then run Typeset again.
+\makenomenclature
+
+\graphicspath{{images/}}    % location of images and graphics
+\titleimage{titleimage}   % insert title image
+
+% find non-ascii characters with regex [^\x00-\x7F]
+\addbibresource{references.bib} % name of bibliography file (references.bib)
+%\AtBeginBibliography{\setcounter{maxnames}{100}}
+
+%%%----------------------------------------------------------
+% Title page entries
+%%%----------------------------------------------------------
+
+
+\institute{Chair of ...}
+\university{Albert-Ludwigs-University of Freiburg}
+\author{Name}
+\title{Title}
+\place{Freiburg i. Br.}
+\datetitle{Month Year}
+\datesub{Day Month Year}
+\supervisor{Name of primary advisor}
+\cosupervisor{Name of secondary advisor}
+
+%%% Restricted publication license instead of CC (master only):
+%\strictlicense
+
+%%%----------------------------------------------------------
+\begin{document}
+%%%----------------------------------------------------------
+
+%%%----------------------------------------------------------
+\frontmatter							% title part (roman page numbers)
+%%%----------------------------------------------------------
+
+\pagestyle{title}
+\maketitle
+\pagestyle{front}
+\include{front/dedication} 
+\tableofcontents
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+\addcontentsline{toc}{chapter}{\listofAfiguresname}
+\listofAfigures
+\addcontentsline{toc}{chapter}{\listofAtablesname}
+\listofAtables
+\include{front/glossary}
+\include{front/listofsymbols}
+
+\include{front/preface} 	% preface is optional
+\include{front/summary}
+\include{front/zusammenfassung}
+
+%%%----------------------------------------------------------
+\mainmatter          			% main part (arabic page numbers)
+%%%----------------------------------------------------------
+
+\pagestyle{main}
+\include{chapters/introduction}
+\include{chapters/data}
+\include{chapters/methodology}
+\include{chapters/results}
+\include{chapters/discussion}
+\include{chapters/conclusion}
+
+%%%----------------------------------------------------------
+\singlespacing
+\printbibliography[heading=bibintoc,title={References}]   % references
+%%%----------------------------------------------------------
+
+%%%----------------------------------------------------------
+\appendix                                         % appendix
+%%%----------------------------------------------------------
+
+\include{back/appendix}
+
+%%% special page for checking print size --------------------
+%\include{back/printbox}
+
+%%%----------------------------------------------------------
+\end{document}
+%%%----------------------------------------------------------

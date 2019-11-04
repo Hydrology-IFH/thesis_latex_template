@@ -1,0 +1,236 @@
+%% hydro.sty
+%% This file is part of the Hydro Thesis package for creating masters's theses
+%% Author: Robin Schwemmle (robin.schwemmle@venus.uni-freiburg.de)
+%% File encoding: ASCII
+
+\NeedsTeXFormat{LaTeX2e}
+\newcommand{\hydroDate}{2017/11/04}	% version string
+\ProvidesPackage{hydro}[\hydroDate]
+
+% Create a default/fallback main language so it is set no matter what
+\providecommand{\hydro@MainLanguage}{english}
+
+% Then pass the language options (german/ngerman/english) from the class file
+\DeclareOption{english}{\renewcommand{\hydro@MainLanguage}{english}}
+\DeclareOption{german}{\renewcommand{\hydro@MainLanguage}{german}}
+\DeclareOption{ngerman}{\renewcommand{\hydro@MainLanguage}{german}}
+\ProcessOptions*
+
+
+%% Required Packages ----------------------------------------------------------
+
+\RequirePackage{lmodern}			% use Latin Modern Fonts
+\RequirePackage{cmap}				% make generated PDF files "searchable and copyable"
+\RequirePackage[T1]{fontenc}		% T1 font encoding for improved hyphenation
+
+\RequirePackage{xifthen}
+
+% Set main language by selectively loading babel with the 'main' parameter (babel 3.9+)
+\ifthenelse{\equal{\hydro@MainLanguage}{german}}%
+	{\RequirePackage[english,main=ngerman]{babel}}{}
+\ifthenelse{\equal{\hydro@MainLanguage}{english}}%
+	{\RequirePackage[main=english,ngerman]{babel}}{}
+
+
+\RequirePackage{datetime}
+\RequirePackage{upquote} 			% uses "right" quotes in the verbatim environment
+\RequirePackage{eurosym}			% provides \euro - conflict with marvosym on \EUR!
+
+\RequirePackage{geometry}
+\RequirePackage{rotating}
+%\RequirePackage{pdflscape}             % to allow rotation of tables and figures
+\RequirePackage{graphicx}
+\RequirePackage{footnote}
+\RequirePackage{adjustbox}
+\RequirePackage[percent]{overpic}	% to allow text/graphics overlays on pictures
+\RequirePackage{pict2e}				% extends the LaTeX 'picture' environment
+
+\RequirePackage{booktabs}
+\RequirePackage{tabularx}
+\RequirePackage{array}
+\RequirePackage{multirow}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\RequirePackage{xcolor}
+\newcommand{\@MissingArg}[1]{\textcolor{red}{#1}}
+
+\RequirePackage[T1,hyphens,obeyspaces,spaces,lowtilde]{url}
+\urlstyle{same}
+
+\RequirePackage{verbatim}
+\RequirePackage{moreverb}
+\def\verbatimtabsize{2\relax}
+
+\RequirePackage{ifpdf}
+\ifpdf % LaTeX is in native PDF mode (pdflatex)
+  \RequirePackage{epstopdf}			% converting EPS to PDF for pdflatex
+%  \pdfcompresslevel=0				% 0 = no compression, 9 = max. compression
+%  \pdfimageresolution=300
+\else								% LaTeX is in emulation mode (DVI-PS-PDF)
+  \RequirePackage[hyphenbreaks]{breakurl} % allows line breaks in URLs without pdflatex (DIV, PS, PDF)
+\fi
+
+%% hyperref Setup -------------------------------------------------------------
+
+\RequirePackage[unicode,breaklinks]{hyperref}	% utf8-change
+\hypersetup{
+	linktocpage = true,				% make page number, not text, be link on TOC, LOF and LOT
+	colorlinks = false,				% don't uses colored links (because this shows up in printing!)
+	pdfborder = {0 0 0.5},			% use a thinner (0.5pt) border around all PDF links
+	allbordercolors = {0 0 0.8},	% dark blue border for all types of links
+	breaklinks = true				% allow links to break over lines by making links over multiple lines
+}	%see https://www.tug.org/applications/hyperref/manual.html
+
+% Redefine certain commands for bookmarks and meta-data
+\let\oldand\and
+\pdfstringdefDisableCommands{%
+	\def\\{}%
+	\def\url#1{<#1>}%
+	\def\and{\texorpdfstring{\oldand}{, }}%
+}
+
+\RequirePackage[figure,table,table*]{hypcap}	% do not redefine figure* for use in article (without captions)
+
+%% Language environments ------------------------------------------------------
+
+% Switch from German to English (babel)
+\newenvironment{english}%
+{\begin{otherlanguage}{english}}%
+{\end{otherlanguage}}
+
+% Switch from English to German (babel)
+\newenvironment{german}%
+{\begin{otherlanguage}{ngerman}}%
+{\end{otherlanguage}}
+
+
+%% Miscellaneous Utility Commands ---------------------------------------------
+
+\newcommand{\SuperPar}[0]{%
+\PackageWarning{hydro}{Due to frequent misuse, macro 'SuperPar' has been removed.}
+}
+
+% Test box for print proofing
+\newcommand{\calibrationbox}[2]{% parameters: #1=width, #2=height
+	\setlength{\unitlength}{1.0mm}%
+	\begin{picture}(#1,#2)%
+	\linethickness{0.05mm}%
+	\put(0,0){\dashbox{0.2}(#1,#2)%
+	{\parbox{#1mm}{%
+	\centering\footnotesize
+	width $ = #1 \textrm{mm}$\\
+	height $ = #2 \textrm{mm}$
+	}}}\end{picture}
+}
+
+% Test box for print proofing (obsolete - use \calibrationbox)
+\newcommand{\Messbox}[2]{
+	\calibrationbox{#1}{#2}
+}
+
+\newcommand{\ShowParameter}[1]{\the#1\showthe#1} % to display TeX parameters
+%Example: clubpenalty = \ShowParameter{\clubpenalty}
+
+
+%% Layout Settings ------------------------------------------------------------
+
+% Captions with font size "small" and additional margin spacing
+\RequirePackage[small,bf]{caption}
+\setlength{\captionmargin}{0mm}
+\setlength{\abovecaptionskip}{0pt}
+\setlength{\belowcaptionskip}{0pt}
+\captionsetup[figure]{font=singlespacing, skip=6pt}
+\captionsetup[table]{font=singlespacing, skip=10pt}
+
+% figures for appendix
+\DeclareCaptionType{Afigure}[Figure]
+\captionsetup[Afigure]{font=singlespacing, skip=6pt}
+\newcommand{\listofAfiguresname}{List of Figures in Appendix}
+\renewcommand*\listAfigurename{List of Figures in Appendix}
+
+% tables for appendix
+\DeclareCaptionType{Atable}[Table]
+\captionsetup[Atable]{font=singlespacing, skip=10pt}
+\newcommand{\listofAtablesname}{List of Tables in Appendix}
+\renewcommand*\listAtablename{List of Tables in Appendix}
+
+\RequirePackage{setspace}
+\setlength{\parskip}{0pt plus 0.1pt}
+\setstretch{1.3}
+\raggedbottom						%\flushbottom
+
+\RequirePackage{wrapfig} % wrap figures and tables with text
+\RequirePackage{afterpage} % wrap landscape pages with text
+\RequirePackage{float}
+\floatstyle{plain}
+
+% Make float placement easier
+\renewcommand{\floatpagefraction}{.9}	% previously: .5
+\renewcommand{\textfraction}{.1}		% previously: .2
+\renewcommand{\topfraction}{.9}		% previously: .7
+\renewcommand{\bottomfraction}{.7}		% previously: .3
+\setcounter{topnumber}{3}				% previously: 2
+\setcounter{bottomnumber}{2}			% previously: 1
+\setcounter{totalnumber}{5}				% previously: 3
+
+\RequirePackage{enumitem}				% fix excessive vertical spacing in lists
+\setlist{%
+	partopsep = .0ex plus .1ex,
+	topsep = .6ex plus .3ex,
+	itemsep = .0ex plus .1ex,
+	parsep = .4ex plus .2ex
+}
+
+\newenvironment{nowidows}%
+	{\clubpenalty=10000%
+	\widowpenalty=10000%
+	\displaywidowpenalty=10000}%
+	{}
+%Example:
+% \begin{nowidows}
+% Any text where no widows are allowed
+% \end{nowidows}
+
+%% Date-related commands ------------------------------------------------------
+
+\RequirePackage{datetime}
+\showdowfalse						% do not show day of week
+
+% adapted from \newdate in datetime.sty
+\newcommand*{\@modifydate}[4]{%
+\@namedef{date@#1@d}{#2}%
+\@namedef{date@#1@m}{#3}%
+\@namedef{date@#1@y}{#4}%
+}
+
+\newdate{hydro@date}{\the\day}{\the\month}{\the\year}
+\newcommand{\Date}[3]{%	example for use: \Date{16}{5}{2008}
+  \@modifydate{hydro@date}{#1}{#2}{#3}
+}
+
+\newcommand{\hydro@GetDateDay}{\getdateday{hydro@date}}
+\newcommand{\hydro@GetDateMonth}{\getdatemonth{hydro@date}}
+\newcommand{\hydro@GetDateYear}{\getdateyear{hydro@date}}
+\newcommand{\hydro@DisplayDate}{\displaydate{hydro@date}}
+
+%% For inserting foreign PDF pages --------------------------------------------
+
+\RequirePackage{pdfpages}
+
+%% ----------------------------------------------------------------------------
+
+\setlength{\fboxsep}{0mm}			%globally zero fbox separator
+
+%% page with dedication --------------------------------------------
+\newenvironment{dedication}
+  {\clearpage           % we want a new page
+   \thispagestyle{empty}% no header and footer
+   \vspace*{\stretch{1}}% some space at the top
+   \raggedleft          % flush to the right margin
+  }
+  {\par % end the paragraph
+   \vspace{\stretch{3}} % space at bottom is three times that at the top
+   \clearpage           % finish off the page
+  }

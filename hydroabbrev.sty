@@ -1,0 +1,42 @@
+%% hydroabbrev.sty
+%% This file is part of the Hydro Thesis package for creating masters's theses
+%% Author: Robin Schwemmle (robin.schwemmle@venus.uni-freiburg.de)
+%% File encoding: ASCII
+
+\ProvidesPackage{hydroabbrev}[2017/11/04]
+
+\newcommand{\latex}{La\-TeX\xspace}	% no ornamental LaTeX anymore
+\newcommand{\tex}{TeX\xspace}		% no ornamental LaTeX anymore
+\newcommand{\bs}{\textbackslash}	% backslash character
+\newcommand{\obnh}{\hskip 0pt }		%optional break without hyphen: e.g. PlugIn{\obnh}Filter
+%\newcommand{\optbreaknh}{\hskip 0pt } %obsolete, replaced by above
+
+% Miscellaneous abbreviations (in dependance on Jochen Kuepper, jkthesis):
+\RequirePackage{xspace}
+\RequirePackage{xpatch}
+\RequirePackage{xstring}
+
+\RequirePackage[nopostdot, nonumberlist, acronym, toc]{glossaries}  % package to create a list of abbreviations
+\setlength{\glsdescwidth}{10\textwidth}
+
+\RequirePackage[intoc, english]{nomencl}  % package to create a list of symbols
+\RequirePackage{etoolbox}
+
+\newcommand{\nomunit}[1]{%
+\renewcommand{\nomentryend}{\hspace*{\fill}#1}} % adding units
+\renewcommand{\nomname}{List of Symbols}
+\patchcmd{\thenomenclature}
+  {\leftmargin\labelwidth}
+  {\leftmargin\labelwidth\itemindent 0em }
+  {}{}
+\setlength{\nomitemsep}{-\parsep}
+\nomlabelwidth=30mm
+
+
+%% English abbreviations:
+
+\newcommand{\ie}{i.e.\@\xspace}
+\newcommand{\eg}{e.g.\@\xspace}
+\newcommand{\Eg}{E.g.\@\xspace}
+%\newcommand{\etc}{etc.\@\xspace}
+\newcommand{\wrt}{w.r.t.\@\xspace}
