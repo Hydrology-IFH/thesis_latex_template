@@ -57,7 +57,7 @@
 % table of contents title
 \addto\captionsenglish{% Replace "english" with the language you use
   \renewcommand{\contentsname}%
-    {Table of Contents}%
+    {Table of Content}%
 }
 
 %% Setup for headings (title, toc, abstract) for hydro* classes only ------------
@@ -67,7 +67,9 @@
 	\RequirePackage[titles]{tocloft}%
 	\renewcommand{\cftchapfont}{\normalfont\sffamily}
   \renewcommand{\cftsecfont}{\normalfont\sffamily}
+  \renewcommand{\cftsubsecfont}{\normalfont\sffamily}
   \renewcommand\cftchappagefont{\normalfont\sffamily}
   \renewcommand\cftsecpagefont{\normalfont\sffamily}
+  \renewcommand\cftsubsecpagefont{\normalfont\sffamily}
 }{}%
 \makeatother%

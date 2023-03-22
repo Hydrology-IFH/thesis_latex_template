@@ -10,16 +10,107 @@
 \RequirePackage{csquotes}				% recommended for biblatex
 
 %Note: biblatex with bibtex backend is frozen at version 1.7.
-\RequirePackage[bibstyle=authoryear-comp,citestyle=authoryear-comp,backend=biber,url=false,isbn=false,useprefix=true,maxcitenames=2,maxbibnames=100,uniquelist=false,autocite=inline,sortcites=true,dashed=false,uniquename=false,hyperref=true,giveninits=true]{biblatex}
+\RequirePackage[bibstyle=authoryear,citestyle=authoryear,backend=biber,url=false,isbn=false,useprefix=true,maxcitenames=2,maxbibnames=100,uniquelist=true,autocite=inline,sortcites=true,dashed=false,uniquename=true,hyperref=true,giveninits=true]{biblatex}
 
-\setlength{\bibitemsep}{1em}     % distance between citation entries
-\setlength{\bibhang}{2em}        % hanging indent after first line
+\setlength{\bibitemsep}{1em}   % distance between citation entries
+\setlength{\bibhang}{2em}      % hanging indent after first line
 \setcounter{abbrvpenalty}{0}   % set hyphenation threshold for citations
 \setcounter{highnamepenalty}{0}
 \setcounter{lownamepenalty}{0}
 
-\DeclareNameAlias{sortname}{last-first}
+\DeclareNameAlias{sortname}{family-given}
 
-% hyphenations exceptions for citations:
-\hyphenation{Schel-le-kens}
-\hyphenation{Hi-ra-ba-ya-shi}  
+\DeclareBibliographyDriver{article}{%
+  \printnames{author}:%
+  \newunit\newblock
+  \printfield{title},%
+  \newunit\newblock
+  \printfield{journaltitle},%
+  \newunit\newblock
+  \printfield{volume},%
+  \newunit\newblock
+  \printfield{pages},%
+  \newunit\newblock
+  \printfield{doi},%
+  \newunit\newblock
+  \printfield{year}.%
+  \finentry}
+
+\DeclareBibliographyDriver{book}{%
+  \printnames{author}:%
+  \newunit\newblock
+  \printfield{title},%
+  \newunit\newblock
+  \printlist{publisher},%
+  \newunit\newblock
+  \printlist{location},%
+  \newunit\newblock
+  \printfield{pages} pp.,%
+  \newunit\newblock
+  \printfield{doi},%
+  \newunit\newblock
+  \printfield{year}.%
+  \finentry}
+
+\DeclareBibliographyDriver{inbook}{%
+  \printnames{author}:%
+  \newunit\newblock
+  \printfield{title},%
+  \newunit\newblock
+  in: \printfield{booktitle},%
+  \newunit\newblock
+  \printlist{publisher},%
+  \newunit\newblock
+  \printlist{location},%
+  \newunit\newblock
+  \printfield{pages},%
+  \newunit\newblock
+  \printfield{doi},%
+  \newunit\newblock
+  \printfield{year}.%
+  \finentry}
+
+\DeclareBibliographyDriver{report}{%
+  \printnames{author}:%
+  \newunit\newblock
+  \printfield{title},%
+  \newunit\newblock
+  \printlist{institution},%
+  \newunit\newblock
+  \printlist{location},%
+  \newunit\newblock
+  \printfield{pages} pp.,%
+  \newunit\newblock
+  \printfield{doi},%
+  \newunit\newblock
+  \printfield{year}.%
+  \finentry}
+
+\DeclareBibliographyDriver{online}{%
+  \printnames{author}:%
+  \newunit\newblock
+  \printfield{title},%
+  \newunit\newblock
+  \printfield{url},%
+  \newunit\newblock
+  \printurldate.%
+  \finentry}
+
+\DeclareFieldFormat
+  [article,thesis,report,unpublished,online]
+  {title}{#1\isdot}
+  \DeclareFieldFormat
+  [book]
+  {title}{#1}
+\DeclareFieldFormat{urldate}{\MakeLowercase{last access}\addcolon\space{#1}}
+\DeclareFieldFormat{url}{\MakeLowercase{available at}\addcolon\space\url{#1}}
+\DeclareFieldFormat{doi}{%
+    \ifhyperref
+        {\href{https://doi.org/#1}{\nolinkurl{#1}}}
+        {\nolinkurl{#1}}}
+
+\DeclareFieldFormat{pages}{#1}
+
+\DeclareDelimFormat{nameyeardelim}{\addcomma\addspace}
+
+% hyphenations exceptions for citations
